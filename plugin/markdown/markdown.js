@@ -14,17 +14,29 @@
 	}
 }( this, function( marked ) {
 
+	var options = {};
+
 	if( typeof marked === 'undefined' ) {
 		throw 'The reveal.js Markdown plugin requires marked to be loaded';
 	}
 
 	if( typeof hljs !== 'undefined' ) {
-		marked.setOptions({
-			highlight: function( lang, code ) {
+		options.highlight = function( lang, code ) {
 				return hljs.highlightAuto( lang, code ).value;
-			}
-		});
+			};
 	}
+
+	var renderer = new marked.Renderer();
+	renderer.code = function (code, language) {
+		if (typeof mermaid !== 'undefined') {
+			if (code.match(/^sequenceDiagram/) || code.match(/^graph/)) {
+				return '<div class="mermaid">' + code + '</div>';
+			}
+		}
+	};
+
+	options.renderer = renderer;
+	marked.setOptions(options);
 
 	var DEFAULT_SLIDE_SEPARATOR = '^\n---\n$',
 		DEFAULT_NOTES_SEPARATOR = 'note:',
