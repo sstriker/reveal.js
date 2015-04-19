@@ -26,9 +26,10 @@
 			};
 	}
 
+	debugger;
 	var renderer = new marked.Renderer({
 		'code': function (code, language, escaped) {
-			if (typeof mermaid !== 'undefined') {
+//			if (typeof mermaid !== 'undefined') {
 				if (language === 'sequenceDiagram' || language === 'graph') {
 					return '<div class="mermaid">' + language + '\n' +
 						code + '</div>';
@@ -37,7 +38,7 @@
 					return '<div class="mermaid">' + code + '</div>';
 				}
 				return Renderer.prototype.code.apply(this, arguments);
-			}
+//			}
 		}
 	});
 
