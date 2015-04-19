@@ -27,8 +27,9 @@
 	}
 
 	debugger;
-	var renderer = new marked.Renderer({
-		'code': function (code, language, escaped) {
+	var renderer = new marked.Renderer;
+	renderer.code = function (code, language, escaped) {
+			debugger;
 //			if (typeof mermaid !== 'undefined') {
 				if (language === 'sequenceDiagram' || language === 'graph') {
 					return '<div class="mermaid">' + language + '\n' +
@@ -39,8 +40,7 @@
 				}
 				return Renderer.prototype.code.apply(this, arguments);
 //			}
-		}
-	});
+		};
 
 	options.renderer = renderer;
 	marked.setOptions(options);
@@ -400,6 +400,7 @@
 		initialize: function() {
 			processSlides();
 			convertSlides();
+			mermaid.init();
 		},
 
 		// TODO: Do these belong in the API?
