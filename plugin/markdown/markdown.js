@@ -26,21 +26,25 @@
 			};
 	}
 
-	debugger;
 	var renderer = new marked.Renderer;
 	renderer.code = function (code, language, escaped) {
-			debugger;
-//			if (typeof mermaid !== 'undefined') {
-				if (language === 'sequenceDiagram' || language === 'graph') {
-					return '<div class="mermaid">' + language + '\n' +
-						code + '</div>';
-				}
-				if (code.match(/^sequenceDiagram/) || code.match(/^graph/)) {
-					return '<div class="mermaid">' + code + '</div>';
-				}
-				return Renderer.prototype.code.apply(this, arguments);
-//			}
-		};
+		if (typeof mermaid !== 'undefined') {
+			if (language === 'sequenceDiagram' ||
+				language === 'graph' ||
+				language === 'dotGraph' ||
+				language === 'gannt') {
+				return '<div class="mermaid">' + language + '\n' +
+					code + '</div>';
+			}
+			if (code.match(/^sequenceDiagram/) ||
+				code.match(/^graph/) ||
+				code.match(/^dotGraph/) ||
+				code.match(/^gannt/)) {
+				return '<div class="mermaid">' + code + '</div>';
+			}
+			return Renderer.prototype.code.apply(this, arguments);
+		}
+	};
 
 	options.renderer = renderer;
 	marked.setOptions(options);
@@ -392,6 +396,9 @@
 
 		}
 
+		if (typeof mermaid !== 'undefined') {
+			mermaid.init();
+		}
 	}
 
 	// API
@@ -400,7 +407,6 @@
 		initialize: function() {
 			processSlides();
 			convertSlides();
-			mermaid.init();
 		},
 
 		// TODO: Do these belong in the API?
