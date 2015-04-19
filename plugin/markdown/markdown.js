@@ -26,14 +26,20 @@
 			};
 	}
 
-	var renderer = new marked.Renderer();
-	renderer.code = function (code, language) {
-		if (typeof mermaid !== 'undefined') {
-			if (code.match(/^sequenceDiagram/) || code.match(/^graph/)) {
-				return '<div class="mermaid">' + code + '</div>';
+	var renderer = new marked.Renderer({
+		'code': function (code, language, escaped) {
+			if (typeof mermaid !== 'undefined') {
+				if (language === 'sequenceDiagram' || language === 'graph') {
+					return '<div class="mermaid">' + language + '\n' +
+						code + '</div>';
+				}
+				if (code.match(/^sequenceDiagram/) || code.match(/^graph/)) {
+					return '<div class="mermaid">' + code + '</div>';
+				}
+				return Renderer.prototype.code.apply(this, arguments);
 			}
 		}
-	};
+	});
 
 	options.renderer = renderer;
 	marked.setOptions(options);
